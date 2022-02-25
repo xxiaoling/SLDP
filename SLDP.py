@@ -65,7 +65,7 @@ while(True):
         print('Red detected')
         #INSERT CODE: Start clockwise rotation; dutycycle = 5
         pwm.start(dutycycle = 5)
-      elif (cv2.countNonZero(green_mask)>cv2.countNonZero(red_mask)) and cv2.countNonZero(green_mask)>(0.25*pixels) #INSERT CONDITIONS HERE: (The frame should have more green pixels than red, and at least 25% of the pixels should be green):
+      elif (cv2.countNonZero(green_mask)>cv2.countNonZero(red_mask)) and cv2.countNonZero(green_mask)>(0.25*pixels): #INSERT CONDITIONS HERE: (The frame should have more green pixels than red, and at least 25% of the pixels should be green):
         print('Green detected')
         #INSERT CODE: Start counterclockwise rotation; dutycycle = 55
         pwm.start(dutycycle = 55)
