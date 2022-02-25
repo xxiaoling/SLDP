@@ -6,6 +6,8 @@ import numpy as np
 from picamera import PiCamera
 from picamera.array import PiRGBArray
 import RPi.GPIO as GPIO
+# Imports For Audio
+import pyttsx3
 
 # GPIO Setup
 GPIO.setwarnings(False)
@@ -16,6 +18,8 @@ GPIO.setmode(GPIO.BCM)
 # INSERT CODE HERE - Set servoPin as GPIO.OUT
 GPIO.setup(servoPin, GPIO.OUT)
 pwm = GPIO.PWM(servoPin, 100)
+# pyttsx3 initializing
+engine = pyttsx3.init()
 
 
 #Section 2: Pi Camera Setup---------------------------------------------------------
@@ -28,7 +32,7 @@ while(True):
   camera.framerate = 30
   rawCapture = PiRGBArray(camera, size=(640, 480))
   pixels = 640*480
-    
+
   for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
     frame = frame.array
     #SECTION 3: Color Detection---------------------------------------------------------
@@ -63,16 +67,22 @@ while(True):
       camera.close()
       if (cv2.countNonZero(red_mask)>cv2.countNonZero(green_mask)) and cv2.countNonZero(red_mask)>(0.25*pixels):
         print('Red detected')
+        engine.say('Red detected')
+        engine.runAndWait()
         #INSERT CODE: Start clockwise rotation; dutycycle = 5
-        pwm.start(dutycycle = 5)
+        pwm.start(dutycycle=5)
       elif (cv2.countNonZero(green_mask)>cv2.countNonZero(red_mask)) and cv2.countNonZero(green_mask)>(0.25*pixels): #INSERT CONDITIONS HERE: (The frame should have more green pixels than red, and at least 25% of the pixels should be green):
         print('Green detected')
+        engine.say('Green detected')
+        engine.runAndWait()
         #INSERT CODE: Start counterclockwise rotation; dutycycle = 55
-        pwm.start(dutycycle = 55)
+        pwm.start(dutycycle=55)
       else:
         print('Neither red nor green detected')
+        engine.say('Neither red nor green detected')
+        engine.runAndWait()
         #INSERT CODE: Stop servo rotation
         pwm.stop()
       print('------------------------')
       break
-GPIO.cleanup()
+  GPIO.cleanup()
