@@ -26,10 +26,10 @@ while(True):
   camera.resolution = (640, 480)
   # INSERT CODE: Set camera frame rate
   camera.framerate = 30
-  rawCapture = PiRGBArray(camera, size=(640,480))
+  rawCapture = PiRGBArray(camera, size=(640, 480))
   pixels = 640*480
     
-  for frame in camera.capture_continuous(rawCapture, format = "bgr", use_video_port=True):
+  for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
     frame = frame.array
     #SECTION 3: Color Detection---------------------------------------------------------
     hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
@@ -38,7 +38,7 @@ while(True):
     red_lower = np.array([160, 70, 50])
     red_upper = np.array([180, 255, 255])
     red_mask = cv2.inRange(hsv, red_lower, red_upper)
-    result_red = cv2.bitwise_and(frame, frame, mask = red_mask)
+    result_red = cv2.bitwise_and(frame, frame, mask=red_mask)
 
     #Green Color Detection:   
     # INSERT CODE: Define green lower boundary
@@ -65,7 +65,7 @@ while(True):
         print('Red detected')
         #INSERT CODE: Start clockwise rotation; dutycycle = 5
         pwm.start(dutycycle = 5)
-      elif (cv2.countNonZero(green_mask)>cv2.countNonZero(red_mask)) and cv2.countNonZero(green_mask)>(0.25*pixels) #INSERT CONDITIONS HERE: (The frame should have more green pixels than red, and at least 25% of the pixels should be green):
+      elif (cv2.countNonZero(green_mask)>cv2.countNonZero(red_mask)) and cv2.countNonZero(green_mask)>(0.25*pixels): #INSERT CONDITIONS HERE: (The frame should have more green pixels than red, and at least 25% of the pixels should be green):
         print('Green detected')
         #INSERT CODE: Start counterclockwise rotation; dutycycle = 55
         pwm.start(dutycycle = 55)
