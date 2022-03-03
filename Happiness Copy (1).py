@@ -5,6 +5,9 @@ import numpy as np
 from picamera import PiCamera
 from picamera.array import PiRGBArray
 import RPi.GPIO as GPIO
+import pyttsx3
+
+engine = pyttsx3.init()
 
 # GPIO Setup
 GPIO.setwarnings(False)
@@ -67,14 +70,20 @@ while(True):
         print('Red detected')
         #INSERT CODE: Start clockwise rotation; dutycycle = 5
         pwm.start(5)
+        engine.say('Red detected')
+        engine.runAndWait()
       elif (cv2.countNonZero(red_mask)<cv2.countNonZero(green_mask)) and cv2.countNonZero(green_mask)>(0.25*pixels): #INSERT CONDITIONS HERE: (The frame should have more green pixels than red, and at least 25% of the pixels should be green):
         print('Green detected')
         #INSERT CODE: Start counterclockwise rotation; dutycycle = 55
         pwm.start(55)
+        engine.say('Green detected')
+        engine.runAndWait()
       else:
-        print('Neither red nor green detected')
+        print('Color not detected')
         #INSERT CODE: Stop servo rotation
         pwm.stop()
+        engine.say('Color not detected')
+        engine.runAndWait()
       print('------------------------')
       break
 GPIO.cleanup()
