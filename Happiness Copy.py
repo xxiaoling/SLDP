@@ -86,5 +86,5 @@ while(True):
         engine.runAndWait()
       print('------------------------')
       break
-GPIO.cleanup()
+  GPIO.cleanup()
 
