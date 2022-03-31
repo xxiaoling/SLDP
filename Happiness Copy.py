@@ -91,23 +91,29 @@ while(True):
     #SECTION 4: Servo Control with Color Detection----------------------------------------------------
     if cv2.waitKey(5) & 0xFF == ord('q'):
       camera.close()
-      if(cv2.countNonZero(red_mask)>cv2.countNonZero(green_mask) and cv2.countNonZero(red_mask)>cv2.countNonZero(orange_mask)) and cv2.countNonZero(red_mask)>(0.25*pixels):
+      if(cv2.countNonZero(red_mask)>cv2.countNonZero(green_mask) and cv2.countNonZero(red_mask)>cv2.countNonZero(orange_mask) and cv2.countNonZero(red_mask)>cv2.countNonZero(yellow_mask)) and cv2.countNonZero(red_mask)>(0.25*pixels):
         print('Red detected')
         #INSERT CODE: Start clockwise rotation; dutycycle = 5
         pwm.start(5)
         engine.say('Red detected')
         engine.runAndWait()
-      elif (cv2.countNonZero(red_mask)<cv2.countNonZero(green_mask) and cv2.countNonZero(orange_mask)<cv2.countNonZero(green_mask)) and cv2.countNonZero(green_mask)>(0.25*pixels): #INSERT CONDITIONS HERE: (The frame should have more green pixels than red, and at least 25% of the pixels should be green):
+      elif (cv2.countNonZero(red_mask)<cv2.countNonZero(green_mask) and cv2.countNonZero(orange_mask)<cv2.countNonZero(green_mask) and cv2.countNonZero(yellow_mask)<cv2.countNonZero(green_mask)) and cv2.countNonZero(green_mask)>(0.25*pixels): #INSERT CONDITIONS HERE: (The frame should have more green pixels than red, and at least 25% of the pixels should be green):
         print('Green detected')
         #INSERT CODE: Start counterclockwise rotation; dutycycle = 55
         pwm.start(55)
         engine.say('Green detected')
         engine.runAndWait()
-      elif (cv2.countNonZero(red_mask)<cv2.countNonZero(orange_mask) and cv2.countNonZero(green_mask)<cv2.countNonZero(orange_mask)) and cv2.countNonZero(orange_mask)>(0.25*pixels):
+      elif (cv2.countNonZero(red_mask)<cv2.countNonZero(orange_mask) and cv2.countNonZero(green_mask)<cv2.countNonZero(orange_mask) and cv2.countNonZero(yellow_mask)<cv2.countNonZero(orange_mask)) and cv2.countNonZero(orange_mask)>(0.25*pixels):
         print('Orange detected')
         
         pwm.start(5)
         engine.say('Orange detected')
+        engine.runAndWait()
+      elif (cv2.countNonZero(red_mask)<cv2.countNonZero(yellow_mask) and cv2.countNonZero(green_mask)<cv2.countNonZero(yellow_mask) and cv2.countNonZero(orange_mask)<cv2.countNonZero(yellow_mask)) and cv2.countNonZero(yellow_mask)>(0.25*pixels):
+        print('Yellow detected')
+        
+        pwm.start(5)
+        engine.say('Yellow detected')
         engine.runAndWait()
       else:
         print('Color not detected')
