@@ -25,6 +25,9 @@ GPIO.setup(servoPin, GPIO.OUT)
 pwm = GPIO.PWM(servoPin, 100)
 
 def detect_color(color, match):
+	global engine
+	global pwm
+	
 	print(color, "detected")
 	pwm.start(5)
 	engine.say(color + "detected")
