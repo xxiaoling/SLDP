@@ -24,6 +24,15 @@ GPIO.setmode(GPIO.BCM)
 GPIO.setup(servoPin, GPIO.OUT)
 pwm = GPIO.PWM(servoPin, 100)
 
+def detect_color(color, match):
+	print(color, "detected")
+	pwm.start(5)
+	engine.say(color + "detected")
+	time.sleep(3)
+	print(color, "matches with", match)
+	engine.say(color + " matches with " + match)
+	engine.runAndWait()
+
 # Pi Camera Setup
 while (True):
 	# Make a camera object
@@ -125,15 +134,6 @@ while (True):
 			blue = cv2.countNonZero(blue_mask)
 			magenta = cv2.countNonZero(magenta_mask)
 			cyan = cv2.countNonZero(cyan_mask)
-
-			def detect_color(color, match):
-				print(color, "detected")
-				pwm.start(5)
-				engine.say(color + "detected")
-				time.sleep(3)
-				print(color, "matches with", match)
-				engine.say(color + " matches with " + match)
-				engine.runAndWait()
 
 			# RED
 			if (red > green and red > orange and red > yellow and red > blue and red > magenta and red > cyan):
