@@ -48,8 +48,8 @@ while(True):
     result_red = cv2.bitwise_and(frame, frame, mask=red_mask)
 
     #Orange Color Detection:
-    orange_lower = np.array([10, 50, 20])
-    orange_upper = np.array([23, 255, 255])
+    orange_lower = np.array([10, 70, 50])
+    orange_upper = np.array([23, 179, 179])
     #orange_lower = np.array([200, 190, 1])
     #orange_upper = np.array([255, 255, 18])
     orange_mask = cv2.inRange(hsv, orange_lower, orange_upper)
@@ -90,18 +90,40 @@ while(True):
     #magenta Color Detection:
     #magenta_lower = np.array([130, 50, 70])
     #magenta_upper = np.array([160, 255, 255])
-    magenta_lower = np.array([140, 50, 75])
+    magenta_lower = np.array([140, 156, 156])
     magenta_upper = np.array([155, 255, 255])
     magenta_mask = cv2.inRange(hsv, magenta_lower, magenta_upper)
     result_magenta = cv2.bitwise_and(frame, frame, mask=magenta_mask)
+    
+    #pink Color Detection:
+    pink_lower = np.array([140, 10, 10])
+    pink_upper = np.array([180, 105, 255])
+    pink_mask = cv2.inRange(hsv, pink_lower, pink_upper)
+    result_pink = cv2.bitwise_and(frame, frame, mask=pink_mask)
+    
+    #Brown Color Detection:
+    brown_lower = np.array([10, 180, 180])
+    brown_upper = np.array([42, 255, 255])
+    brown_mask = cv2.inRange(hsv, brown_lower, brown_upper)
+    result_brown = cv2.bitwise_and(frame, frame, mask=brown_mask)
+    
+    #Gray Color Detection:
+    gray_lower = np.array([120, 120, 120])
+    gray_upper = np.array([255, 255, 255])
+    gray_mask = cv2.inRange(hsv, gray_lower, gray_upper)
+    result_gray = cv2.bitwise_and(frame, frame, mask=gray_mask)
+    
 
     #Result:
     # INSERT CODE: Combine the results so both red and green colors are isolated from the video using bitwise_or
     result_red_and_green = cv2.bitwise_or(result_red, result_green)
     result_blue_and_orange = cv2.bitwise_or(result_blue, result_orange)
     result_yellow_and_magenta = cv2.bitwise_or(result_yellow, result_magenta)
+    result_cyan_and_pink = cv2.bitwise_or(result_cyan, result_pink)
+    result_brown_and_gray = cv2.bitwise_or(result_brown, result_gray)
     result_some_colors = cv2.bitwise_or(result_red_and_green, result_blue_and_orange)
-    result_more_colors = cv2.bitwise_or(result_some_colors, result_cyan)
+    result_more_colors = cv2.bitwise_or(result_some_colors, result_cyan_and_pink)
+    result_even_more_colors = cv2.bitwise_or(result_more_colors, result_brown_and_gray)
     result_colors = cv2.bitwise_or(result_more_colors, result_yellow_and_magenta)
 
     # INSERT CODE: Display the final result
@@ -117,63 +139,62 @@ while(True):
     #if (time.time() - start_time >= 3) and (cv2.waitKey(3)):
       camera.close()
       # RED
-      if(cv2.countNonZero(red_mask)>cv2.countNonZero(green_mask) and cv2.countNonZero(red_mask)>cv2.countNonZero(orange_mask) and cv2.countNonZero(red_mask)>cv2.countNonZero(yellow_mask) and cv2.countNonZero(red_mask)>cv2.countNonZero(blue_mask) and cv2.countNonZero(red_mask)>cv2.countNonZero(magenta_mask)) and cv2.countNonZero(red_mask)>(0.25*pixels):
+      if(cv2.countNonZero(red_mask)>cv2.countNonZero(green_mask) and cv2.countNonZero(red_mask)>cv2.countNonZero(orange_mask) and cv2.countNonZero(red_mask)>cv2.countNonZero(yellow_mask) and cv2.countNonZero(red_mask)>cv2.countNonZero(blue_mask) and cv2.countNonZero(red_mask)>cv2.countNonZero(magenta_mask)) and cv2.countNonZero(red_mask)>(0.08*pixels):
         print('Red detected')
         #INSERT CODE: Start clockwise rotation; dutycycle = 5
         pwm.start(5)
-        engine.say('Red detected')
+        engine.say('huh Red detected')
         time.sleep(3)
         print('Red matches with Orange')
         engine.say('Red matches with Orange')
         engine.runAndWait()
       # GREEN
-      elif (cv2.countNonZero(red_mask)<cv2.countNonZero(green_mask) and cv2.countNonZero(orange_mask)<cv2.countNonZero(green_mask) and cv2.countNonZero(yellow_mask)<cv2.countNonZero(green_mask) and cv2.countNonZero(blue_mask)<cv2.countNonZero(green_mask) and cv2.countNonZero(magenta_mask)<cv2.countNonZero(green_mask)) and cv2.countNonZero(green_mask)>(0.25*pixels): #INSERT CONDITIONS HERE: (The frame should have more green pixels than red, and at least 25% of the pixels should be green):
+      elif (cv2.countNonZero(red_mask)<cv2.countNonZero(green_mask) and cv2.countNonZero(orange_mask)<cv2.countNonZero(green_mask) and cv2.countNonZero(yellow_mask)<cv2.countNonZero(green_mask) and cv2.countNonZero(blue_mask)<cv2.countNonZero(green_mask) and cv2.countNonZero(magenta_mask)<cv2.countNonZero(green_mask)) and cv2.countNonZero(green_mask)>(0.08*pixels): #INSERT CONDITIONS HERE: (The frame should have more green pixels than red, and at least 25% of the pixels should be green):
         print('Green detected')
         #INSERT CODE: Start counterclockwise rotation; dutycycle = 55
         pwm.start(55)
-        engine.say('Green detected')
+        engine.say('huh Green detected')
         engine.runAndWait()
       # ORANGE
-      elif (cv2.countNonZero(red_mask)<cv2.countNonZero(orange_mask) and cv2.countNonZero(green_mask)<cv2.countNonZero(orange_mask) and cv2.countNonZero(yellow_mask)<cv2.countNonZero(orange_mask) and cv2.countNonZero(blue_mask)<cv2.countNonZero(orange_mask) and cv2.countNonZero(magenta_mask)<cv2.countNonZero(orange_mask)) and cv2.countNonZero(orange_mask)>(0.25*pixels):
+      elif (cv2.countNonZero(red_mask)<cv2.countNonZero(orange_mask) and cv2.countNonZero(green_mask)<cv2.countNonZero(orange_mask) and cv2.countNonZero(yellow_mask)<cv2.countNonZero(orange_mask) and cv2.countNonZero(blue_mask)<cv2.countNonZero(orange_mask) and cv2.countNonZero(magenta_mask)<cv2.countNonZero(orange_mask)) and cv2.countNonZero(orange_mask)>(0.08*pixels):
         print('Orange detected')
         
         pwm.start(5)
-        engine.say('Orange detected')
+        engine.say('huh Orange detected')
         engine.runAndWait()
       # YELLOW
-      elif (cv2.countNonZero(red_mask)<cv2.countNonZero(yellow_mask) and cv2.countNonZero(green_mask)<cv2.countNonZero(yellow_mask) and cv2.countNonZero(orange_mask)<cv2.countNonZero(yellow_mask) and cv2.countNonZero(blue_mask)<cv2.countNonZero(yellow_mask) and cv2.countNonZero(magenta_mask)<cv2.countNonZero(yellow_mask)) and cv2.countNonZero(yellow_mask)>(0.25*pixels):
+      elif (cv2.countNonZero(red_mask)<cv2.countNonZero(yellow_mask) and cv2.countNonZero(green_mask)<cv2.countNonZero(yellow_mask) and cv2.countNonZero(orange_mask)<cv2.countNonZero(yellow_mask) and cv2.countNonZero(blue_mask)<cv2.countNonZero(yellow_mask) and cv2.countNonZero(magenta_mask)<cv2.countNonZero(yellow_mask)) and cv2.countNonZero(yellow_mask)>(0.08*pixels):
         print('Yellow detected')
         
         pwm.start(5)
-        engine.say('Yellow detected')
+        engine.say('huh Yellow detected')
         engine.runAndWait()
       # BLUE
-      elif (cv2.countNonZero(red_mask)<cv2.countNonZero(blue_mask) and cv2.countNonZero(green_mask)<cv2.countNonZero(blue_mask) and cv2.countNonZero(orange_mask)<cv2.countNonZero(blue_mask) and cv2.countNonZero(yellow_mask)<cv2.countNonZero(blue_mask) and cv2.countNonZero(magenta_mask)<cv2.countNonZero(blue_mask)) and cv2.countNonZero(blue_mask)>(0.25*pixels):
+      elif (cv2.countNonZero(red_mask)<cv2.countNonZero(blue_mask) and cv2.countNonZero(green_mask)<cv2.countNonZero(blue_mask) and cv2.countNonZero(orange_mask)<cv2.countNonZero(blue_mask) and cv2.countNonZero(yellow_mask)<cv2.countNonZero(blue_mask) and cv2.countNonZero(magenta_mask)<cv2.countNonZero(blue_mask)) and cv2.countNonZero(blue_mask)>(0.08*pixels):
         print('Blue detected')
         
         pwm.start(5)
-        engine.say('Blue detected')
+        engine.say('huh Blue detected')
         engine.runAndWait()
       # magenta
-      elif (cv2.countNonZero(red_mask)<cv2.countNonZero(magenta_mask) and cv2.countNonZero(green_mask)<cv2.countNonZero(magenta_mask) and cv2.countNonZero(orange_mask)<cv2.countNonZero(magenta_mask) and cv2.countNonZero(yellow_mask)<cv2.countNonZero(magenta_mask) and cv2.countNonZero(blue_mask)<cv2.countNonZero(magenta_mask)) and cv2.countNonZero(magenta_mask)>(0.25*pixels):
+      elif (cv2.countNonZero(red_mask)<cv2.countNonZero(magenta_mask) and cv2.countNonZero(green_mask)<cv2.countNonZero(magenta_mask) and cv2.countNonZero(orange_mask)<cv2.countNonZero(magenta_mask) and cv2.countNonZero(yellow_mask)<cv2.countNonZero(magenta_mask) and cv2.countNonZero(blue_mask)<cv2.countNonZero(magenta_mask)) and cv2.countNonZero(magenta_mask)>(0.08*pixels):
         print('Magenta detected')
-        
         pwm.start(5)
-        engine.say('Magenta detected')
+        engine.say('huh Magenta detected')
         engine.runAndWait()
       # cyan
-      elif (cv2.countNonZero(red_mask)<cv2.countNonZero(cyan_mask) and cv2.countNonZero(green_mask)<cv2.countNonZero(cyan_mask) and cv2.countNonZero(orange_mask)<cv2.countNonZero(cyan_mask) and cv2.countNonZero(yellow_mask)<cv2.countNonZero(cyan_mask) and cv2.countNonZero(blue_mask)<cv2.countNonZero(cyan_mask)) and cv2.countNonZero(cyan_mask)>(0.25*pixels):
+      elif (cv2.countNonZero(red_mask)<cv2.countNonZero(cyan_mask) and cv2.countNonZero(green_mask)<cv2.countNonZero(cyan_mask) and cv2.countNonZero(orange_mask)<cv2.countNonZero(cyan_mask) and cv2.countNonZero(yellow_mask)<cv2.countNonZero(cyan_mask) and cv2.countNonZero(blue_mask)<cv2.countNonZero(cyan_mask)) and cv2.countNonZero(cyan_mask)>(0.08*pixels):
         print('Cyan detected')
         
         pwm.start(5)
-        engine.say('Cyan detected')
+        engine.say('huh Cyan detected')
         engine.runAndWait()
       # NO COLOR DETECTED (ELSE CASE)
       else:
         print('Color not detected')
         #INSERT CODE: Stop servo rotation
         pwm.stop()
-        engine.say('Color not detected')
+        engine.say('huh Color not detected')
         engine.runAndWait()
       print('------------------------')
       break
