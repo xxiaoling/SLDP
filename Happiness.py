@@ -142,11 +142,12 @@ while (True):
 		# Display the final result
 		cv2.imshow("Color Detection in Real-Time", result_colors)
 
-		rawCapture.truncate(0) # Stop rawCapture to clear the stream in preparation for the next frame
+		# Stop rawCapture to clear the stream in preparation for the next frame
+		rawCapture.truncate(0)
 
 		# Color Detection
-		if (cv2.waitKey(5) & 0xFF == ord('q')):
-		# if (time.time() - start_time >= 3) and (cv2.waitKey(3)):
+		# if (cv2.waitKey(5) & 0xFF == ord('q')):
+		if (time.time() - start_time >= 3) and (cv2.waitKey(3)):
 			camera.close()
 
 			red = cv2.countNonZero(red_mask)
@@ -210,8 +211,9 @@ while (True):
 				engine.say("huh Color not detected")
 				engine.runAndWait()
 
+			# Update start time (in seconds)
+			start_time = time.time()
 			print("------------------------")
 			break
-		start_time = time.time()
 
 	GPIO.cleanup()
