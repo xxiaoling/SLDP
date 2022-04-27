@@ -42,8 +42,9 @@ def detect_color(color):
 	global pwm
 	
 	print(color, "detected")
-	pwm.start(5)
+	# pwm.start(5)
 	engine.say("huh" + color + "detected")
+	engine.runAndWait()
 
 # Function to say matching color aloud
 def match_color(color, match):
