@@ -36,6 +36,7 @@ GPIO.setmode(GPIO.BCM)
 GPIO.setup(servoPin, GPIO.OUT)
 pwm = GPIO.PWM(servoPin, 100)
 
+# Function to say color aloud
 def detect_color(color):
 	global engine
 	global pwm
@@ -44,6 +45,7 @@ def detect_color(color):
 	pwm.start(5)
 	engine.say("huh" + color + "detected")
 
+# Function to say matching color aloud
 def match_color(color, match):
 	global engine
 	global pwm
@@ -52,6 +54,7 @@ def match_color(color, match):
 	engine.say("huh" + color + " matches with " + match)
 	engine.runAndWait()
 
+# Function to reset the color counters
 def reset_counters():
 	global red_counter
 	global green_counter
@@ -194,24 +197,32 @@ while (True):
 			brown = cv2.countNonZero(brown_mask)
 			gray = cv2.countNonZero(gray_mask)
 
+			# Color detection personalization
 			percent = 0.08
 			detect_delay_time = 3 # seconds
 			match_delay_time = 3 + detect_delay_time # seconds
 
 			# RED
 			if (red > percent * pixels) and (red > green and red > orange and red > yellow and red > blue and red > magenta and red > cyan and red > pink and red > brown and red > gray):
+				# If previously detected color is the same
+				# add 1 to counter 
 				if (prev_color == "red"):
 					red_counter += 1
 				else:
-					reset_counters()
+					reset_counters() # If the detected color is different, start over
 
+				# If detected color has been the same for a set
+				# amount of time, read it aloud
 				if (red_counter == detect_delay_time):
 					detect_color("Red")
 
+				# If detected color has been the same for an even
+				# longer amount of time, read its matching color
 				elif (red_counter == match_delay_time):
 					match_color("Red", "Gray")
-					reset_counters()
+					reset_counters() # Reset the color counters to start detecting again
 
+				# Update previous color
 				prev_color = "red"
 
 			# GREEN
