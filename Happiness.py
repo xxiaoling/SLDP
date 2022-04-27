@@ -144,7 +144,7 @@ while (True):
 
 		rawCapture.truncate(0) # Stop rawCapture to clear the stream in preparation for the next frame
 
-		# Servo Control with Color Detection
+		# Color Detection
 		if (cv2.waitKey(5) & 0xFF == ord('q')):
 		# if (time.time() - start_time >= 3) and (cv2.waitKey(3)):
 			camera.close()
@@ -212,6 +212,6 @@ while (True):
 
 			print("------------------------")
 			break
-			start_time = time.time()
+		start_time = time.time()
 
 	GPIO.cleanup()
