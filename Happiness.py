@@ -36,16 +36,20 @@ GPIO.setmode(GPIO.BCM)
 GPIO.setup(servoPin, GPIO.OUT)
 pwm = GPIO.PWM(servoPin, 100)
 
-def detect_color(color, match):
+def detect_color(color):
 	global engine
 	global pwm
 	
 	print(color, "detected")
 	pwm.start(5)
 	engine.say("huh" + color + "detected")
-	time.sleep(3)
+
+def match_color(color, match):
+	global engine
+	global pwm
+
 	print(color, "matches with", match)
-	engine.say(color + " matches with " + match)
+	engine.say("huh" + color + " matches with " + match)
 	engine.runAndWait()
 
 def reset_counters():
@@ -103,8 +107,6 @@ while (True):
 		result_red = cv2.bitwise_and(frame, frame, mask = red_mask)
 
 		# Orange Color Detection:
-		# orange_lower = np.array([200, 190, 1])
-		# orange_upper = np.array([255, 255, 18])
 		orange_lower = np.array([10, 70, 50])
 		orange_upper = np.array([23, 179, 179])
 		orange_mask = cv2.inRange(hsv, orange_lower, orange_upper)
@@ -123,24 +125,18 @@ while (True):
 		result_green = cv2.bitwise_and(frame, frame, mask = green_mask)
 
 		# Cyan Color Detection:
-		# cyan_lower = np.array([125, 0, 255])
-		# cyan_upper = np.array([0, 125, 255])
 		cyan_lower = np.array([85, 50, 50])
 		cyan_upper = np.array([99, 255, 255])
 		cyan_mask = cv2.inRange(hsv, cyan_lower, cyan_upper)
 		result_cyan = cv2.bitwise_and(frame, frame, mask = cyan_mask)
 
 		# Blue Color Detection:
-		# blue_lower = np.array([125, 0, 255])
-		# blue_upper = np.array([0, 125, 255])
 		blue_lower = np.array([100, 50, 50])
 		blue_upper = np.array([130, 255, 255])
 		blue_mask = cv2.inRange(hsv, blue_lower, blue_upper)
 		result_blue = cv2.bitwise_and(frame, frame, mask = blue_mask)
 
 		# Magenta Color Detection:
-		# magenta_lower = np.array([130, 50, 70])
-		# magenta_upper = np.array([160, 255, 255])
 		magenta_lower = np.array([140, 156, 156])
 		magenta_upper = np.array([155, 255, 255])
 		magenta_mask = cv2.inRange(hsv, magenta_lower, magenta_upper)
@@ -199,7 +195,8 @@ while (True):
 			gray = cv2.countNonZero(gray_mask)
 
 			percent = 0.08
-			delay_time = 3 # seconds
+			detect_delay_time = 3 # seconds
+			match_delay_time = 3 + detect_delay_time # seconds
 
 			# RED
 			if (red > percent * pixels) and (red > green and red > orange and red > yellow and red > blue and red > magenta and red > cyan and red > pink and red > brown and red > gray):
@@ -208,8 +205,11 @@ while (True):
 				else:
 					reset_counters()
 
-				if (red_counter == delay_time):
-					detect_color("Red", "Orange")
+				if (red_counter == detect_delay_time):
+					detect_color("Red")
+
+				elif (red_counter == match_delay_time):
+					match_color("Red", "Gray")
 					reset_counters()
 
 				prev_color = "red"
@@ -221,8 +221,11 @@ while (True):
 				else:
 					reset_counters()
 
-				if (green_counter == delay_time):
-					detect_color("Green", "Orange")
+				if (green_counter == detect_delay_time):
+					detect_color("Green")
+
+				elif (green_counter == match_delay_time):
+					match_color("Green", "White")
 					reset_counters()
 
 				prev_color = "green"
@@ -234,8 +237,11 @@ while (True):
 				else:
 					reset_counters()
 
-				if (orange_counter == delay_time):
-					detect_color("Orange", "Red")
+				if (orange_counter == detect_delay_time):
+					detect_color("Orange")
+
+				elif (orange_counter == match_delay_time):
+					match_color("Orange", "Blue")
 					reset_counters()
 
 				prev_color = "orange"
@@ -247,8 +253,11 @@ while (True):
 				else:
 					reset_counters()
 
-				if (yellow_counter == delay_time):
-					detect_color("Yellow", "Orange")
+				if (yellow_counter == detect_delay_time):
+					detect_color("Yellow")
+
+				elif (yellow_counter == match_delay_time):
+					match_color("Yellow", "White")
 					reset_counters()
 
 				prev_color = "yellow"
@@ -260,8 +269,11 @@ while (True):
 				else:
 					reset_counters()
 
-				if (blue_counter == delay_time):
-					detect_color("Blue", "Orange")
+				if (blue_counter == detect_delay_time):
+					detect_color("Blue")
+
+				elif (blue_counter == match_delay_time):
+					match_color("Blue", "Orange")
 					reset_counters()
 
 				prev_color = "blue"
@@ -273,8 +285,11 @@ while (True):
 				else:
 					reset_counters()
 
-				if (magenta_counter == delay_time):
-					detect_color("Magenta", "Orange")
+				if (magenta_counter == detect_delay_time):
+					detect_color("Magenta")
+
+				elif (magenta_counter == match_delay_time):
+					match_color("Magenta", "Pink")
 					reset_counters()
 
 				prev_color = "magenta"
@@ -286,8 +301,11 @@ while (True):
 				else:
 					reset_counters()
 
-				if (cyan_counter == delay_time):
-					detect_color("Cyan", "Orange")
+				if (cyan_counter == detect_delay_time):
+					detect_color("Cyan")
+
+				elif (cyan_counter == match_delay_time):
+					match_color("Cyan", "White")
 					reset_counters()
 
 				prev_color = "cyan"
@@ -299,8 +317,11 @@ while (True):
 				else:
 					reset_counters()
 
-				if (pink_counter == delay_time):
-					detect_color("Pink", "Orange")
+				if (pink_counter == detect_delay_time):
+					detect_color("Pink")
+
+				elif (pink_counter == match_delay_time):
+					match_color("Pink", "Magenta")
 					reset_counters()
 
 				prev_color = "pink"
@@ -312,8 +333,11 @@ while (True):
 				else:
 					reset_counters()
 
-				if (brown_counter == delay_time):
-					detect_color("Brown", "Orange")
+				if (brown_counter == detect_delay_time):
+					detect_color("Brown")
+
+				elif (brown_counter == match_delay_time):
+					match_color("Brown", "White")
 					reset_counters()
 
 				prev_color = "brown"
@@ -325,8 +349,11 @@ while (True):
 				else:
 					reset_counters()
 
-				if (gray_counter == delay_time):
-					detect_color("Gray", "Orange")
+				if (gray_counter == detect_delay_time):
+					detect_color("Gray")
+
+				elif (gray_counter == match_delay_time):
+					match_color("Gray", "Red")
 					reset_counters()
 
 				prev_color = "gray"
@@ -338,7 +365,7 @@ while (True):
 				else:
 					reset_counters()
 
-				if (no_color_counter == delay_time):
+				if (no_color_counter == detect_delay_time):
 					print("Color not detected")
 					# Stop servo rotation
 					pwm.stop()
