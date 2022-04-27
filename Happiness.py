@@ -10,6 +10,18 @@ import time
 # Initial variables
 engine = pyttsx3.init()
 start_time = time.time()
+prev_color = ""
+red_counter = 0
+green_counter = 0
+orange_counter = 0
+yellow_counter = 0
+blue_counter = 0
+magenta_counter = 0
+cyan_counter = 0
+pink_counter = 0
+brown_counter = 0
+gray_counter = 0
+no_color_counter = 0
 
 # GPIO Setup
 GPIO.setwarnings(False)
@@ -35,6 +47,31 @@ def detect_color(color, match):
 	print(color, "matches with", match)
 	engine.say(color + " matches with " + match)
 	engine.runAndWait()
+
+def reset_counters():
+	global red_counter
+	global green_counter
+	global orange_counter
+	global yellow_counter
+	global blue_counter
+	global magenta_counter
+	global cyan_counter
+	global pink_counter
+	global brown_counter
+	global gray_counter
+	global no_color_counter
+
+	red_counter = 0
+	green_counter = 0
+	orange_counter = 0
+	yellow_counter = 0
+	blue_counter = 0
+	magenta_counter = 0
+	cyan_counter = 0
+	pink_counter = 0
+	brown_counter = 0
+	gray_counter = 0
+	no_color_counter = 0
 
 # Pi Camera Setup
 while (True):
@@ -147,7 +184,7 @@ while (True):
 
 		# Color Detection
 		# if (cv2.waitKey(5) & 0xFF == ord('q')):
-		if (time.time() - start_time >= 3) and (cv2.waitKey(3)):
+		if (time.time() - start_time >= 1): # 1 second intervals
 			camera.close()
 
 			red = cv2.countNonZero(red_mask)
@@ -162,54 +199,154 @@ while (True):
 			gray = cv2.countNonZero(gray_mask)
 
 			percent = 0.08
+			delay_time = 3 # seconds
 
 			# RED
 			if (red > percent * pixels) and (red > green and red > orange and red > yellow and red > blue and red > magenta and red > cyan and red > pink and red > brown and red > gray):
-				detect_color("Red", "Orange")
+				if (prev_color == "red"):
+					red_counter += 1
+				else:
+					reset_counters()
+
+				if (red_counter == delay_time):
+					detect_color("Red", "Orange")
+					reset_counters()
+
+				prev_color = "red"
 
 			# GREEN
 			elif (green > percent * pixels) and (green > red and green > orange and green > yellow and green > blue and green > magenta and green > cyan and green > pink and green > brown and green > gray):
-				detect_color("Green", "Orange")
+				if (prev_color == "green"):
+					green_counter += 1
+				else:
+					reset_counters()
+
+				if (green_counter == delay_time):
+					detect_color("Green", "Orange")
+					reset_counters()
+
+				prev_color = "green"
 
 			# ORANGE
 			elif (orange > percent * pixels) and (orange > red and orange > green and orange > yellow and orange > blue and orange > magenta and orange > cyan and orange > pink and orange > brown and orange > gray):
-				detect_color("Orange", "Red")
+				if (prev_color == "orange"):
+					orange_counter += 1
+				else:
+					reset_counters()
+
+				if (orange_counter == delay_time):
+					detect_color("Orange", "Red")
+					reset_counters()
+
+				prev_color = "orange"
 
 			# YELLOW
 			elif (yellow > percent * pixels) and (yellow > red and yellow > green and yellow > orange and yellow > blue and yellow > magenta and yellow > cyan and yellow > pink and yellow > brown and yellow > gray):
-				detect_color("Yellow", "Orange")
+				if (prev_color == "yellow"):
+					yellow_counter += 1
+				else:
+					reset_counters()
+
+				if (yellow_counter == delay_time):
+					detect_color("Yellow", "Orange")
+					reset_counters()
+
+				prev_color = "yellow"
 
 			# BLUE
 			elif (blue > percent * pixels) and (blue > red and blue > green and blue > orange and blue > yellow and blue > magenta and blue > cyan and blue > pink and blue > brown and blue > gray):
-				detect_color("Blue", "Orange")
+				if (prev_color == "blue"):
+					blue_counter += 1
+				else:
+					reset_counters()
+
+				if (blue_counter == delay_time):
+					detect_color("Blue", "Orange")
+					reset_counters()
+
+				prev_color = "blue"
 
 			# MAGENTA
 			elif (magenta > percent * pixels) and (magenta > red and magenta > green and magenta > orange and magenta > yellow and magenta > blue and magenta > cyan and magenta > pink and magenta > brown and magenta > gray):
-				detect_color("Magenta", "Orange")
+				if (prev_color == "magenta"):
+					magenta_counter += 1
+				else:
+					reset_counters()
+
+				if (magenta_counter == delay_time):
+					detect_color("Magenta", "Orange")
+					reset_counters()
+
+				prev_color = "magenta"
 
 			# CYAN
 			elif (cyan > percent * pixels) and (cyan > red and cyan > green and cyan > orange and cyan > yellow and cyan > blue and cyan > magenta and cyan > pink and cyan > brown and cyan > gray):
-				detect_color("Cyan", "Orange")
+				if (prev_color == "cyan"):
+					cyan_counter += 1
+				else:
+					reset_counters()
+
+				if (cyan_counter == delay_time):
+					detect_color("Cyan", "Orange")
+					reset_counters()
+
+				prev_color = "cyan"
 
 			# PINK
 			elif (pink > percent * pixels) and (pink > red and pink > green and pink > orange and pink > yellow and pink > blue and pink > magenta and pink > cyan and pink > brown and pink > gray):
-				detect_color("Pink", "Orange")
+				if (prev_color == "pink"):
+					pink_counter += 1
+				else:
+					reset_counters()
+
+				if (pink_counter == delay_time):
+					detect_color("Pink", "Orange")
+					reset_counters()
+
+				prev_color = "pink"
 
 			# BROWN
 			elif (brown > percent * pixels) and (brown > red and brown > green and brown > orange and brown > yellow and brown > blue and brown > magenta and brown > cyan and brown > pink and brown > gray):
-				detect_color("Brown", "Orange")
+				if (prev_color == "brown"):
+					brown_counter += 1
+				else:
+					reset_counters()
+
+				if (brown_counter == delay_time):
+					detect_color("Brown", "Orange")
+					reset_counters()
+
+				prev_color = "brown"
 
 			# GRAY
 			elif (gray > percent * pixels) and (gray > red and gray > green and gray > orange and gray > yellow and gray > blue and gray > magenta and gray > cyan and gray > pink and gray > brown):
-				detect_color("Gray", "Orange")
+				if (prev_color == "gray"):
+					gray_counter += 1
+				else:
+					reset_counters()
+
+				if (gray_counter == delay_time):
+					detect_color("Gray", "Orange")
+					reset_counters()
+
+				prev_color = "gray"
 
 			# NO COLOR DETECTED
 			else:
-				print("Color not detected")
-				# Stop servo rotation
-				pwm.stop()
-				engine.say("huh Color not detected")
-				engine.runAndWait()
+				if (prev_color == "no color"):
+					no_color_counter += 1
+				else:
+					reset_counters()
+
+				if (no_color_counter == delay_time):
+					print("Color not detected")
+					# Stop servo rotation
+					pwm.stop()
+					engine.say("huh Color not detected")
+					engine.runAndWait()
+					reset_counters()
+
+				prev_color = "no color"
 
 			# Update start time (in seconds)
 			start_time = time.time()
