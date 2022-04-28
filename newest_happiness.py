@@ -20,40 +20,30 @@ magenta_counter = 0
 cyan_counter = 0
 pink_counter = 0
 brown_counter = 0
-gray_counter = 0
+NYUPurple_counter = 0
 no_color_counter = 0
-
-# GPIO Setup
-GPIO.setwarnings(False)
-
-# Set variable for servoPin
-servoPin = 17
-
-# Set GPIO mode to GPIO.BCM
-GPIO.setmode(GPIO.BCM)
-
-# Set servoPin as GPIO.OUT
-GPIO.setup(servoPin, GPIO.OUT)
-pwm = GPIO.PWM(servoPin, 100)
 
 # Function to say color aloud
 def detect_color(color):
     global engine
-    global pwm
 
     print(color, "detected")
-    pwm.start(5)
     engine.say("huh" + color + "detected")
     engine.runAndWait()
 
 # Function to say matching color aloud
 def match_color(color, match):
     global engine
-    global pwm
-
-    print(color, "matches with", match)
-    engine.say("huh" + color + " matches with " + match)
-    engine.runAndWait()
+    
+    if (color != "NYUPurple"):
+        print(color, "matches with", match)
+        engine.say("huh" + color + " matches with " + match)
+        engine.runAndWait()
+    else:
+        print(color, "matches with", match)
+        engine.say("huh" + color + " matches with " + match)
+        engine.say("Violet Pride!")
+        engine.runAndWait()
 
 # Function to reset the color counters
 def reset_counters():
@@ -66,7 +56,7 @@ def reset_counters():
     global cyan_counter
     global pink_counter
     global brown_counter
-    global gray_counter
+    global NYUPurple_counter
     global no_color_counter
 
     red_counter = 0
@@ -78,7 +68,7 @@ def reset_counters():
     cyan_counter = 0
     pink_counter = 0
     brown_counter = 0
-    gray_counter = 0
+    NYUPurple_counter = 0
     no_color_counter = 0
 
 # Pi Camera Setup
@@ -109,10 +99,8 @@ while (True):
         result_red = cv2.bitwise_and(frame, frame, mask = red_mask)
 
         # Orange Color Detection:
-        # orange_lower = np.array([200, 190, 1])
-        # orange_upper = np.array([255, 255, 18])
-        orange_lower = np.array([10, 100, 100])
-        orange_upper = np.array([42, 255, 255])
+        orange_lower = np.array([15, 150, 150])
+        orange_upper = np.array([60, 255, 255])
         orange_mask = cv2.inRange(hsv, orange_lower, orange_upper)
         result_orange = cv2.bitwise_and(frame, frame, mask = orange_mask)
 
@@ -129,46 +117,40 @@ while (True):
         result_green = cv2.bitwise_and(frame, frame, mask = green_mask)
 
         # Cyan Color Detection:
-        # cyan_lower = np.array([125, 0, 255])
-        # cyan_upper = np.array([0, 125, 255])
         cyan_lower = np.array([80, 100, 100])
         cyan_upper = np.array([100, 255, 255])
         cyan_mask = cv2.inRange(hsv, cyan_lower, cyan_upper)
         result_cyan = cv2.bitwise_and(frame, frame, mask = cyan_mask)
 
         # Blue Color Detection:
-        # blue_lower = np.array([125, 0, 255])
-        # blue_upper = np.array([0, 125, 255])
         blue_lower = np.array([110, 100, 100])
         blue_upper = np.array([130, 255, 255])
         blue_mask = cv2.inRange(hsv, blue_lower, blue_upper)
         result_blue = cv2.bitwise_and(frame, frame, mask = blue_mask)
 
         # Magenta Color Detection:
-        # magenta_lower = np.array([130, 50, 70])
-        # magenta_upper = np.array([160, 255, 255])
-        magenta_lower = np.array([140, 100, 100])
+        magenta_lower = np.array([140, 150, 100])
         magenta_upper = np.array([160, 255, 255])
         magenta_mask = cv2.inRange(hsv, magenta_lower, magenta_upper)
         result_magenta = cv2.bitwise_and(frame, frame, mask = magenta_mask)
 
         # Pink Color Detection:
-        pink_lower = np.array([160, 50, 100])
-        pink_upper = np.array([170, 255, 255])
+        pink_lower = np.array([150, 0, 0])
+        pink_upper = np.array([160, 150, 255])
         pink_mask = cv2.inRange(hsv, pink_lower, pink_upper)
         result_pink = cv2.bitwise_and(frame, frame, mask=pink_mask)
         
         # Brown Color Detection:
-        brown_lower = np.array([10, 100, 100])
-        brown_upper = np.array([50, 100, 170])
+        brown_lower = np.array([10, 100, 20])
+        brown_upper = np.array([20, 255, 200])
         brown_mask = cv2.inRange(hsv, brown_lower, brown_upper)
         result_brown = cv2.bitwise_and(frame, frame, mask=brown_mask)
         
-        # Gray Color Detection:
-        gray_lower = np.array([120, 100, 100])
-        gray_upper = np.array([255, 255, 255])
-        gray_mask = cv2.inRange(hsv, gray_lower, gray_upper)
-        result_gray = cv2.bitwise_and(frame, frame, mask=gray_mask)
+        # NYUPurple Color Detection:
+        NYUPurple_lower = np.array([120, 150, 150])
+        NYUPurple_upper = np.array([140, 255, 255])
+        NYUPurple_mask = cv2.inRange(hsv, NYUPurple_lower, NYUPurple_upper)
+        result_NYUPurple = cv2.bitwise_and(frame, frame, mask=NYUPurple_mask)
 
         # Result:
         # Combine the results so all colors are isolated from the video using bitwise_or
@@ -176,10 +158,10 @@ while (True):
         result_blue_and_orange = cv2.bitwise_or(result_blue, result_orange)
         result_yellow_and_magenta = cv2.bitwise_or(result_yellow, result_magenta)
         result_cyan_and_pink = cv2.bitwise_or(result_cyan, result_pink)
-        result_brown_and_gray = cv2.bitwise_or(result_brown, result_gray)
+        result_brown_and_NYUPurple = cv2.bitwise_or(result_brown, result_NYUPurple)
         result_some_colors = cv2.bitwise_or(result_red_and_green, result_blue_and_orange)
         result_more_colors = cv2.bitwise_or(result_some_colors, result_cyan_and_pink)
-        result_even_more_colors = cv2.bitwise_or(result_more_colors, result_brown_and_gray)
+        result_even_more_colors = cv2.bitwise_or(result_more_colors, result_brown_and_NYUPurple)
         result_colors = cv2.bitwise_or(result_more_colors, result_yellow_and_magenta)
 
         # Display the final result
@@ -189,8 +171,7 @@ while (True):
         rawCapture.truncate(0)
 
         # Color Detection
-        # if (cv2.waitKey(5) & 0xFF == ord('q')):
-        if (time.time() - start_time >= 1): # 1 second intervals
+        if (time.time() - start_time >= 1) and cv2.waitKey(1): # 1 second intervals
             camera.close()
 
             red = cv2.countNonZero(red_mask)
@@ -202,15 +183,15 @@ while (True):
             cyan = cv2.countNonZero(cyan_mask)
             pink = cv2.countNonZero(pink_mask)
             brown = cv2.countNonZero(brown_mask)
-            gray = cv2.countNonZero(gray_mask)
+            NYUPurple = cv2.countNonZero(NYUPurple_mask)
 
             # Color detection personalization
             percent = 0.08
             detect_delay_time = 3 # seconds
             match_delay_time = 3 + detect_delay_time # seconds
 
-                # RED
-            if (red > percent * pixels) and (red > green and red > orange and red > yellow and red > blue and red > magenta and red > cyan and red > pink and red > brown and red > gray):
+            # RED
+            if (red > percent * pixels) and (red > green and red > orange and red > yellow and red > blue and red > magenta and red > cyan and red > pink and red > brown and red > NYUPurple):
                 # If previously detected color is the same
                 # add 1 to counter 
                 if (prev_color == "red"):
@@ -226,14 +207,14 @@ while (True):
                 # If detected color has been the same for an even
                 # longer amount of time, read its matching color
                 elif (red_counter == match_delay_time):
-                    match_color("Red", "Gray")
+                    match_color("Red", "NYUPurple")
                     reset_counters() # Reset the color counters to start detecting again
 
                 # Update previous color
                 prev_color = "red"
 
             # GREEN
-            elif (green > percent * pixels) and (green > red and green > orange and green > yellow and green > blue and green > magenta and green > cyan and green > pink and green > brown and green > gray):
+            elif (green > percent * pixels) and (green > red and green > orange and green > yellow and green > blue and green > magenta and green > cyan and green > pink and green > brown and green > NYUPurple):
                 if (prev_color == "green"):
                     green_counter += 1
                 else:
@@ -249,7 +230,7 @@ while (True):
                 prev_color = "green"
 
             # ORANGE
-            elif (orange > percent * pixels) and (orange > red and orange > green and orange > yellow and orange > blue and orange > magenta and orange > cyan and orange > pink and orange > brown and orange > gray):
+            elif (orange > percent * pixels) and (orange > red and orange > green and orange > yellow and orange > blue and orange > magenta and orange > cyan and orange > pink and orange > brown and orange > NYUPurple):
                 if (prev_color == "orange"):
                     orange_counter += 1
                 else:
@@ -265,7 +246,7 @@ while (True):
                 prev_color = "orange"
 
             # YELLOW
-            elif (yellow > percent * pixels) and (yellow > red and yellow > green and yellow > orange and yellow > blue and yellow > magenta and yellow > cyan and yellow > pink and yellow > brown and yellow > gray):
+            elif (yellow > percent * pixels) and (yellow > red and yellow > green and yellow > orange and yellow > blue and yellow > magenta and yellow > cyan and yellow > pink and yellow > brown and yellow > NYUPurple):
                 if (prev_color == "yellow"):
                     yellow_counter += 1
                 else:
@@ -281,7 +262,7 @@ while (True):
                 prev_color = "yellow"
 
             # BLUE
-            elif (blue > percent * pixels) and (blue > red and blue > green and blue > orange and blue > yellow and blue > magenta and blue > cyan and blue > pink and blue > brown and blue > gray):
+            elif (blue > percent * pixels) and (blue > red and blue > green and blue > orange and blue > yellow and blue > magenta and blue > cyan and blue > pink and blue > brown and blue > NYUPurple):
                 if (prev_color == "blue"):
                     blue_counter += 1
                 else:
@@ -291,13 +272,13 @@ while (True):
                     detect_color("Blue")
 
                 elif (blue_counter == match_delay_time):
-                    match_color("Blue", "Orange")
+                    match_color("Blue", "NYUPurple")
                     reset_counters()
 
                 prev_color = "blue"
 
             # MAGENTA
-            elif (magenta > percent * pixels) and (magenta > red and magenta > green and magenta > orange and magenta > yellow and magenta > blue and magenta > cyan and magenta > pink and magenta > brown and magenta > gray):
+            elif (magenta > percent * pixels) and (magenta > red and magenta > green and magenta > orange and magenta > yellow and magenta > blue and magenta > cyan and magenta > pink and magenta > brown and magenta > NYUPurple):
                 if (prev_color == "magenta"):
                     magenta_counter += 1
                 else:
@@ -313,7 +294,7 @@ while (True):
                 prev_color = "magenta"
 
             # CYAN
-            elif (cyan > percent * pixels) and (cyan > red and cyan > green and cyan > orange and cyan > yellow and cyan > blue and cyan > magenta and cyan > pink and cyan > brown and cyan > gray):
+            elif (cyan > percent * pixels) and (cyan > red and cyan > green and cyan > orange and cyan > yellow and cyan > blue and cyan > magenta and cyan > pink and cyan > brown and cyan > NYUPurple):
                 if (prev_color == "cyan"):
                     cyan_counter += 1
                 else:
@@ -329,7 +310,7 @@ while (True):
                 prev_color = "cyan"
 
             # PINK
-            elif (pink > percent * pixels) and (pink > red and pink > green and pink > orange and pink > yellow and pink > blue and pink > magenta and pink > cyan and pink > brown and pink > gray):
+            elif (pink > percent * pixels) and (pink > red and pink > green and pink > orange and pink > yellow and pink > blue and pink > magenta and pink > cyan and pink > brown and pink > NYUPurple):
                 if (prev_color == "pink"):
                     pink_counter += 1
                 else:
@@ -345,7 +326,7 @@ while (True):
                 prev_color = "pink"
 
             # BROWN
-            elif (brown > percent * pixels) and (brown > red and brown > green and brown > orange and brown > yellow and brown > blue and brown > magenta and brown > cyan and brown > pink and brown > gray):
+            elif (brown > percent * pixels) and (brown > red and brown > green and brown > orange and brown > yellow and brown > blue and brown > magenta and brown > cyan and brown > pink and brown > NYUPurple):
                 if (prev_color == "brown"):
                     brown_counter += 1
                 else:
@@ -360,21 +341,21 @@ while (True):
 
                 prev_color = "brown"
 
-            # GRAY
-            elif (gray > percent * pixels) and (gray > red and gray > green and gray > orange and gray > yellow and gray > blue and gray > magenta and gray > cyan and gray > pink and gray > brown):
-                if (prev_color == "gray"):
-                    gray_counter += 1
+            # NYUPurple
+            elif (NYUPurple > percent * pixels) and (NYUPurple > red and NYUPurple > green and NYUPurple > orange and NYUPurple > yellow and NYUPurple > blue and NYUPurple > magenta and NYUPurple > cyan and NYUPurple > pink and NYUPurple > brown):
+                if (prev_color == "NYUPurple"):
+                    NYUPurple_counter += 1
                 else:
                     reset_counters()
 
-                if (gray_counter == detect_delay_time):
-                    detect_color("Gray")
+                if (NYUPurple_counter == detect_delay_time):
+                    detect_color("NYUPurple")
 
-                elif (gray_counter == match_delay_time):
-                    match_color("Gray", "Red")
+                elif (NYUPurple_counter == match_delay_time):
+                    match_color("NYUPurple", "Blue")
                     reset_counters()
 
-                prev_color = "gray"
+                prev_color = "NYUPurple"
 
             # NO COLOR DETECTED
             else:
@@ -385,8 +366,6 @@ while (True):
 
                 if (no_color_counter == detect_delay_time):
                     print("Color not detected")
-                    # Stop servo rotation
-                    pwm.stop()
                     engine.say("huh Color not detected")
                     engine.runAndWait()
                     reset_counters()
@@ -397,5 +376,3 @@ while (True):
             start_time = time.time()
             print("------------------------")
             break
-
-GPIO.cleanup()
